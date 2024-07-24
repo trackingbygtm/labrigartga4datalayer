@@ -1,150 +1,296 @@
+//Initialize GTM tag
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-00000000');
 
-<!-- Google Tag Manager -->
-<script>
-  (function (w, d, s, l, i) {
-    w[l] = w[l] || [];
-    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-    var f = d.getElementsByTagName(s)[0],
-      j = d.createElement(s),
-      dl = l != "dataLayer" ? "&l=" + l : "";
-    j.async = true;
-    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-    f.parentNode.insertBefore(j, f);
-  })(window, document, "script", "dataLayer", "GTM-xxxxx");
-</script>
-<!-- End Google Tag Manager -->
+// initialize the dataLayer if not already present
+window.dataLayer = window.dataLayer || [];
 
-{% if first_time_accessed %}
-<!-- GTM DataLayer -->
-<script>
-  (function() {
-    window.dataLayer = window.dataLayer || [];
+//subscribe to events
 
-    const eventPrefix = '';
-    const formatedItemId = true;
-    const dataSchema = {
-      ecommerce: {
-          show: true
-      },
-      dynamicRemarketing: {
-          show: false,
-          business_vertical: 'retail'
-      }
-    }
+analytics.subscribe('clicked', (event) => {
+  console.log('click_event', event);
+});
+
+analytics.subscribe('checkout_started', (event) => {
+  console.log('checkout_started', event)
+  window.dataLayer.push({
+   'event': 'begin_checkout',
+    'currency': event.data.checkout.currencyCode,
+    'email':event.data.checkout.email,
+    'value': event.data.checkout.totalPrice.amount,
+    'lineItems': event.data.checkout.lineItems,
+    'fired_from': 'custom_pixel'
+  });
+});
+
+analytics.subscribe('checkout_address_info_submitted', (event) => {
+  console.log('checkout_address_info_submitted', event)
+  window.dataLayer.push({
+   'event': 'add_shipping_info',
+    'currency': event.data.checkout.currencyCode,
+    'email':event.data.checkout.email,
+    'value': event.data.checkout.totalPrice.amount,
+    'lineItems': event.data.checkout.lineItems,
+    'shippingAddress': event.data.checkout.shippingAddress,
+    'shippingLine': event.data.checkout.shippingLine,
+    'fired_from': 'custom_pixel'
+  });
+});
+
+//subscribe to events
+analytics.subscribe("checkout_completed", (event) => {
+  window.dataLayer.push({
+    event: "checkout_completed",
+    timestamp: event.timestamp,
+    id: event.id,
+    token: event.data?.checkout?.token,
+    url: event.context.document.location.href,
+    client_id: event.clientId,
+    email: event.data?.checkout?.email,
+    phone: event.data?.checkout?.phone,
+    first_name: event.data?.checkout?.shippingAddress?.firstName,
+    last_name: event.data?.checkout?.shippingAddress?.lastName,
+    address1: event.data?.checkout?.shippingAddress?.address1,
+    address2: event.data?.checkout?.shippingAddress?.address2,
+    city: event.data?.checkout?.shippingAddress?.city,
+    country: event.data?.checkout?.shippingAddress?.country,
+    countryCode: event.data?.checkout?.shippingAddress?.countryCode,
+    province: event.data?.checkout?.shippingAddress?.province,
+    provinceCode: event.data?.checkout?.shippingAddress?.provinceCode,
+    zip: event.data?.checkout?.shippingAddress?.zip,
+    orderId: event.data?.checkout?.order?.id,
+    currency: event.data?.checkout?.currencyCode,
+    subtotal: event.data?.checkout?.subtotalPrice?.amount,
+    shipping: event.data?.checkout?.shippingLine?.price?.amount,
+    value: event.data?.checkout?.totalPrice?.amount,
+    tax: event.data?.checkout?.totalTax?.amount,
+  });
+});
+
+analytics.subscribe("payment_info_submitted", (event) => {
+  window.dataLayer.push({
+    event: "payment_info_submitted",
+    timestamp: event.timestamp,
+    id: event.id,
+    token: event.data?.checkout?.token,
+    url: event.context.document.location.href,
+    client_id: event.clientId,
+    email: event.data?.checkout?.email,
+    phone: event.data?.checkout?.phone,
+    first_name: event.data?.checkout?.shippingAddress?.firstName,
+    last_name: event.data?.checkout?.shippingAddress?.lastName,
+    address1: event.data?.checkout?.shippingAddress?.address1,
+    address2: event.data?.checkout?.shippingAddress?.address2,
+    city: event.data?.checkout?.shippingAddress?.city,
+    country: event.data?.checkout?.shippingAddress?.country,
+    countryCode: event.data?.checkout?.shippingAddress?.countryCode,
+    province: event.data?.checkout?.shippingAddress?.province,
+    provinceCode: event.data?.checkout?.shippingAddress?.provinceCode,
+    zip: event.data?.checkout?.shippingAddress?.zip,
+    orderId: event.data?.checkout?.order?.id,
+    currency: event.data?.checkout?.currencyCode,
+    subtotal: event.data?.checkout?.subtotalPrice?.amount,
+    shipping: event.data?.checkout?.shippingLine?.price?.amount,
+    value: event.data?.checkout?.totalPrice?.amount,
+    tax: event.data?.checkout?.totalTax?.amount,
+  });
+});
+
+analytics.subscribe("checkout_shipping_info_submitted", (event) => {
+  window.dataLayer.push({
+    event: checkout_shipping_info_submitted,
+    timestamp: event.timestamp,
+    id: event.id,
+    token: event.data?.checkout?.token,
+    url: event.context.document.location.href,
+    client_id: event.clientId,
+    email: event.data?.checkout?.email,
+    phone: event.data?.checkout?.phone,
+    first_name: event.data?.checkout?.shippingAddress?.firstName,
+    last_name: event.data?.checkout?.shippingAddress?.lastName,
+    address1: event.data?.checkout?.shippingAddress?.address1,
+    address2: event.data?.checkout?.shippingAddress?.address2,
+    city: event.data?.checkout?.shippingAddress?.city,
+    country: event.data?.checkout?.shippingAddress?.country,
+    countryCode: event.data?.checkout?.shippingAddress?.countryCode,
+    province: event.data?.checkout?.shippingAddress?.province,
+    provinceCode: event.data?.checkout?.shippingAddress?.provinceCode,
+    zip: event.data?.checkout?.shippingAddress?.zip,
+    orderId: event.data?.checkout?.order?.id,
+    currency: event.data?.checkout?.currencyCode,
+    subtotal: event.data?.checkout?.subtotalPrice?.amount,
+    shipping: event.data?.checkout?.shippingLine?.price?.amount,
+    value: event.data?.checkout?.totalPrice?.amount,
+    tax: event.data?.checkout?.totalTax?.amount,
+  });
+});
+
+analytics.subscribe("checkout_address_info_submitted", (event) => {
+  window.dataLayer.push({
+    event: "checkout_address_info_submitted",
+    timestamp: event.timestamp,
+    id: event.id,
+    token: event.data?.checkout?.token,
+    url: event.context.document.location.href,
+    client_id: event.clientId,
+    email: event.data?.checkout?.email,
+    phone: event.data?.checkout?.phone,
+    first_name: event.data?.checkout?.shippingAddress?.firstName,
+    last_name: event.data?.checkout?.shippingAddress?.lastName,
+    address1: event.data?.checkout?.shippingAddress?.address1,
+    address2: event.data?.checkout?.shippingAddress?.address2,
+    city: event.data?.checkout?.shippingAddress?.city,
+    country: event.data?.checkout?.shippingAddress?.country,
+    countryCode: event.data?.checkout?.shippingAddress?.countryCode,
+    province: event.data?.checkout?.shippingAddress?.province,
+    provinceCode: event.data?.checkout?.shippingAddress?.provinceCode,
+    zip: event.data?.checkout?.shippingAddress?.zip,
+    orderId: event.data?.checkout?.order?.id,
+    currency: event.data?.checkout?.currencyCode,
+    subtotal: event.data?.checkout?.subtotalPrice?.amount,
+    shipping: event.data?.checkout?.shippingLine?.price?.amount,
+    value: event.data?.checkout?.totalPrice?.amount,
+    tax: event.data?.checkout?.totalTax?.amount,
+  });
+});
+
+analytics.subscribe("checkout_contact_info_submitted", (event) => {
+  window.dataLayer.push({
+    event: "checkout_contact_info_submitted",
+    timestamp: event.timestamp,
+    id: event.id,
+    token: event.data?.checkout?.token,
+    url: event.context.document.location.href,
+    client_id: event.clientId,
+    email: event.data?.checkout?.email,
+    phone: event.data?.checkout?.phone,
+    first_name: event.data?.checkout?.shippingAddress?.firstName,
+    last_name: event.data?.checkout?.shippingAddress?.lastName,
+    address1: event.data?.checkout?.shippingAddress?.address1,
+    address2: event.data?.checkout?.shippingAddress?.address2,
+    city: event.data?.checkout?.shippingAddress?.city,
+    country: event.data?.checkout?.shippingAddress?.country,
+    countryCode: event.data?.checkout?.shippingAddress?.countryCode,
+    province: event.data?.checkout?.shippingAddress?.province,
+    provinceCode: event.data?.checkout?.shippingAddress?.provinceCode,
+    zip: event.data?.checkout?.shippingAddress?.zip,
+    orderId: event.data?.checkout?.order?.id,
+    currency: event.data?.checkout?.currencyCode,
+    subtotal: event.data?.checkout?.subtotalPrice?.amount,
+    shipping: event.data?.checkout?.shippingLine?.price?.amount,
+    value: event.data?.checkout?.totalPrice?.amount,
+    tax: event.data?.checkout?.totalTax?.amount,
+  });
+});
+
+analytics.subscribe("checkout_started", (event) => {
+  window.dataLayer.push({
+    event: "checkout_started",
+    timestamp: event.timestamp,
+    id: event.id,
+    token: event.data?.checkout?.token,
+    url: event.context.document.location.href,
+    client_id: event.clientId,
+    email: event.data?.checkout?.email,
+    phone: event.data?.checkout?.phone,
+    first_name: event.data?.checkout?.shippingAddress?.firstName,
+    last_name: event.data?.checkout?.shippingAddress?.lastName,
+    address1: event.data?.checkout?.shippingAddress?.address1,
+    address2: event.data?.checkout?.shippingAddress?.address2,
+    city: event.data?.checkout?.shippingAddress?.city,
+    country: event.data?.checkout?.shippingAddress?.country,
+    countryCode: event.data?.checkout?.shippingAddress?.countryCode,
+    province: event.data?.checkout?.shippingAddress?.province,
+    provinceCode: event.data?.checkout?.shippingAddress?.provinceCode,
+    zip: event.data?.checkout?.shippingAddress?.zip,
+    orderId: event.data?.checkout?.order?.id,
+    currency: event.data?.checkout?.currencyCode,
+    subtotal: event.data?.checkout?.subtotalPrice?.amount,
+    shipping: event.data?.checkout?.shippingLine?.price?.amount,
+    value: event.data?.checkout?.totalPrice?.amount,
+    tax: event.data?.checkout?.totalTax?.amount,
+  });
+});
+
+analytics.subscribe("product_added_to_cart", (event) => {
+  window.dataLayer.push({
+    event: "product_added_to_cart",
+    timestamp: event.timestamp,
+    id: event.id,
+    client_id: event.clientId,
+    url: event.context.document.location.href,
+    price: event.data?.cartLine?.merchandise?.price?.amount,
+    currency: event.data?.cartLine?.merchandise?.id,
+    product_title: event.data?.cartLine?.merchandise?.product?.title,
+    quantity: event.data?.cartLine?.quantity,
+    total_cost: event.data?.cartLine?.cost?.totalAmount?.amount,
+  });
+});
+
+analytics.subscribe("cart_viewed", (event) => {
+  window.dataLayer.push({
+    event: "cart_viewed",
+    timestamp: event.timestamp,
+    id: event.id,
+    client_id: event.clientId,
+    url: event.context.document.location.href,
+    total_cost: event.data?.cart?.cost?.totalAmount?.amount,
+    quantity: event.data?.cart?.totalQuantity,
+    cart_id: event.data?.cart?.id,
+  });
+});
+
+analytics.subscribe("page_viewed", (event) => {
+  window.dataLayer.push({
+    event: "page_viewed",
+    timestamp: event.timestamp,
+    id: event.id,
+    client_id: event.clientId,
+    url: event.context.document.location.href,
+    page_title: event.context.document.title,
+  });
+});
+
+analytics.subscribe("product_viewed", (event) => {
+  window.dataLayer.push({
+    event: "product_viewed",
+    timestamp: event.timestamp,
+    id: event.id,
+    client_id: event.clientId,
+    url: event.context.document.location.href,
+    product_id: event.data?.productVariant?.product?.id,
+    product_title: event.data?.productVariant?.title,
+    product_sku: event.data?.productVariant?.sku,
+  });
+});
+
+analytics.subscribe("search_submitted", (event) => {
+  window.dataLayer.push({
+    event: "search_submitted",
+    timestamp: event.timestamp,
+    id: event.id,
+    client_id: event.clientId,
+    url: event.context.document.location.href,
+    query: event.data?.searchResult?.query,
+  });
+});
+
+analytics.subscribe("collection_viewed", (event) => {
+  window.dataLayer.push({
+    event: "collection_viewed",
+    timestamp: event.timestamp,
+    id: event.id,
+    client_id: event.clientId,
+    url: event.context.document.location.href,
+    collection_id: event.data?.collection?.id,
+    collection_title: event.data?.collection?.title,
+  });
+});
 
 
-    // customer information
-    const currentUser = {};
-    {% if customer %}
-      currentUser.id = {{ customer.id }};
-      currentUser.first_name = "{{ customer.first_name }}";
-      currentUser.last_name = "{{ customer.last_name }}";
-      currentUser.full_name = "{{ customer.name }}";
-      currentUser.email = "{{ customer.email }}";
-      currentUser.phone = "{{ customer.default_address.phone }}";
-      currentUser.new_customer = {% if customer.orders_count < 2 %}true{% else %}false{% endif %};
-
-      {% if customer.default_address %}
-        currentUser.address = {
-          address_summary: "{{ customer.default_address.summary }}",
-          address1: "{{ customer.default_address.address1 }}",
-          address2: "{{ customer.default_address.address2 }}",
-          city: "{{ customer.default_address.city }}",
-          street: "{{ customer.default_address.street }}",
-          zip_code: "{{ customer.default_address.zip }}",
-          company: "{{ customer.default_address.company }}",
-          country: "{{ customer.default_address.country.name }}",
-          country_code: "{{ customer.default_address.country_code }}",
-          province: "{{ customer.default_address.province }}"
-        };
-      {% endif %}
-    {% elsif checkout.customer %}
-      currentUser.id = {{ checkout.customer.id }};
-      currentUser.first_name = "{{ checkout.customer.first_name }}";
-      currentUser.last_name = "{{ checkout.customer.last_name }}";
-      currentUser.full_name = "{{ checkout.customer.name }}";
-      currentUser.email = "{{ checkout.customer.email }}";
-      currentUser.phone = "{{ checkout.customer.default_address.phone }}";
-      currentUser.new_customer = {% if checkout.customer.orders_count < 2 %}true{% else %}false{% endif %};
-
-      {% if checkout.billing_address %}
-        currentUser.address = {
-          address_summary: "{{ checkout.billing_address.summary }}",
-          address1: "{{ checkout.billing_address.address1 }}",
-          address2: "{{ checkout.billing_address.address2 }}",
-          city: "{{ checkout.billing_address.city }}",
-          street: "{{ checkout.billing_address.street }}",
-          zip_code: "{{ checkout.billing_address.zip }}",
-          company: "{{ checkout.billing_address.company }}",
-          country: "{{ checkout.billing_address.country.name }}",
-          country_code: "{{ checkout.billing_address.country_code }}",
-          province: "{{ checkout.billing_address.province }}"
-        };
-      {% endif %}
-    {% endif %}
-
-    if (currentUser.email) {
-      currentUser.hash_email = "{{ currentUser.email | sha256}}"
-    }
-    dataLayer.push({
-      customer: currentUser
-    });
 
 
-    // labrigart_purchase event
-    const couponCode = [];
-    {% for discount_application in discount_applications %}
-      couponCode.push("{{ discount_application.title }}")
-    {% endfor %}
 
-
-    dataLayer.push({ ecommerce: null });
-
-    const dataLayerData = {
-      event: eventPrefix + "labrigart_purchase",
-      ecommerce: {
-        transaction_id: "{{ checkout.order_number | replace: '#', '' | default: checkout.id | replace: '#', '' }}",
-        value: {{ checkout.total_price  | times: 0.01 }},
-        tax: {{ checkout.tax_price | times: 0.01 }},
-        shipping: {{ checkout.shipping_price | times: 0.01 }},
-        discount: {{ checkout.discounts_amount | times: 0.01 }},
-        currency: "{{ checkout.currency }}",
-        coupon: couponCode.join(','),
-        items: [
-          {% for line_item in line_items %}
-            {
-              item_id: formatedItemId ? "shopify_{{ shop.address.country_code }}_{{ line_item.product_id }}_{{ line_item.variant.id }}" : "{{ line_item.product_id }}",
-              product_id: "{{ line_item.product_id }}",
-              variant_id: "{{ line_item.variant.id }}",
-              item_name: "{{ line_item.product.title }}",
-              {% if line_item.variant.title != "Default Title" %}
-                'item_variant': "{{ line_item.variant.title }}",
-              {% endif %}
-              discount: {{ line_item.line_level_total_discount | times: 0.01 }},
-              sku: "{{ line_item.sku }}",
-              price: {{ line_item.final_price | times: 0.01 }},
-              quantity: {{ line_item.quantity }},
-              item_brand: "{{ line_item.vendor }}",
-              item_category: "{{ line_item.product.type }}"
-            },
-          {% endfor %}
-        ]
-      }
-    }
-
-    if(dataSchema.dynamicRemarketing && dataSchema.dynamicRemarketing.show) {
-      dataLayerData['dynamicRemarketing'] = {
-          value: dataLayerData.ecommerce.value,
-          items: dataLayerData.ecommerce.items.map(item => ({id: item.item_id, google_business_vertical: dataSchema.dynamicRemarketing.business_vertical}))
-      }
-    }
-
-    if(!dataSchema.ecommerce ||  !dataSchema.ecommerce.show) {
-      delete dataLayerData['ecommerce'];
-    }
-
-    dataLayer.push(dataLayerData);
-  })();
-</script>
-<!-- END GTM DataLayer -->
-{% endif %}
